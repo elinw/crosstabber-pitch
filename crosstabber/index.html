@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Presenting Crosstabber</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Presenting Crosstabber">
+  <meta name="author" content="Elin">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Presenting Crosstabber</h1>
+    <h2>An easy to use application for real world data</h2>
+    <p>Elin<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>The Problem</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>We want beginning sociology students to engage in real data analysis but ...</p>
+
+<ul>
+<li>Big statistical packages are too complicated; we end up teaching software not sociology.</li>
+<li>Many online applications are also complicated.</li>
+<li>Other online applications are easy but they don&#39;t give the micro data we need for what we are teaching.</li>
+<li>We don&#39;t want to use artifical or mini data sets.</li>
+<li>Many of the best applications for students are too old to run one modern browsers, new operating systems or mobile devices.</li>
+<li>Spreadsheets can do a lot but they won&#39;t work with large datasets and are really poor for crosstabs, which are a core tool in sociology, especially for beginning students.</li>
+</ul>
+
+<p>We need an open source solution where instructors can supply their own data in a way.
+It needs to be easy for students and pretty easy for faculty too. </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>The Solution</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Use the ShinyApps infrastructure to support simple analyses using R</p>
+
+<p>It makes it easy to do crosstabs</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Create new data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>To make new datasets to use in your own instance, you can use crosstabber-tools.</p>
+
+<pre><code class="r">physicians&lt;-readRDS(&quot;./physicians.rds&quot;)
+</code></pre>
+
+<pre><code>## Warning: cannot open compressed file &#39;./physicians.rds&#39;, probable reason
+## &#39;No such file or directory&#39;
+</code></pre>
+
+<pre><code>## Error: cannot open the connection
+</code></pre>
+
+<pre><code class="r">                    source(&quot;./recodeutilities&quot;)
+</code></pre>
+
+<pre><code>## Warning: cannot open file &#39;./recodeutilities&#39;: No such file or directory
+</code></pre>
+
+<pre><code>## Error: cannot open the connection
+</code></pre>
+
+<pre><code class="r">##dataframe is a dataframe that contains the RAC1P variable and the HISP variable
+## This function pulls all self-identified Hispanics or Latinos into a separate group
+## regardless of what self-identified race category they are in.
+racerecode&lt;-function(dataframe)
+{
+        ## Pull out Hispanics into a separate code.
+        dataframe$racerecode&lt;-ifelse(dataframe$HISP &gt; 1, 10, dataframe$RAC1P)
+        racelabels&lt;-c(&quot;White&quot;, &quot;Black&quot;, &quot;Asian&quot;, &quot;American Indian + Alaskan Native &quot;, &quot;Other&quot;, &quot;Multiple&quot;, &quot;Latino&quot;)
+        racecuts&lt;-c(0,1,2,4,6,8,9,10)
+        dataframe$Race&lt;-cut(dataframe$racerecode, breaks=racecuts, labels=racelabels)
+        return(dataframe)
+}
+
+racerecode(physicians)
+</code></pre>
+
+<pre><code>## Error: object &#39;physicians&#39; not found
+</code></pre>
+
+<pre><code class="r">table(physicians$Race)
+</code></pre>
+
+<pre><code>## Error: object &#39;physicians&#39; not found
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Try it</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Try crosstabber: <a href="http://elinw.shinyapps.io/crosstabber/">http://elinw.shinyapps.io/crosstabber/</a></p>
+
+<p>Get the code: <a href="https://github.com/elinw/crosstabber">https://github.com/elinw/crosstabber</a></p>
+
+<p>Create your own data sets: <a href="https://github.com/elinw/crosstabber-tools">https://github.com/elinw/crosstabber-tools</a></p>
+
+<p>Get your own micro data from Data Ferret: <a href="http://dataferrett.census.gov/">http://dataferrett.census.gov/</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='The Problem'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='The Solution'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Create new data'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Try it'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
