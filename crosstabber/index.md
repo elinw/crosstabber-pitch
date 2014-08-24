@@ -31,65 +31,38 @@ Use the ShinyApps infrastructure to support simple analyses using R
 
 It makes it easy to do crosstabs
 
+It is not overwhelming
+
+It is easy to add your own data sets and custom recoding, which can be as complex as you want.
+
+Much of the R code is prewritten, with good examples to follow. 
+
+You can find helpful code at the crosstabber-tools repository.
 
 --- .class #id 
 
 ## Create new data
 To make new datasets to use in your own instance, you can use crosstabber-tools.
+The census uses some standard variable names which makes sharing code easier..
+For example it creates recodes easily
 
 ```r
-physicians<-readRDS("./physicians.rds")
+        agebreaks<-c(0, 4, 14, 24, 34, 44, 54, 64, 200)
+        agelabels=c("Under 4", "5-14", "15-24", "25-34", "35-44", "45-54", "55-64", "65+")
+agebreaks
 ```
 
 ```
-## Warning: cannot open compressed file './physicians.rds', probable reason
-## 'No such file or directory'
+## [1]   0   4  14  24  34  44  54  64 200
 ```
+Then to apply on your dataframe you use code like this (but substituting the name of your dataframe).
 
-```
-## Error: cannot open the connection
-```
+````
+dataframe$Age<-cut(dataframe$AGEP, breaks=agebreaks, ordered_result=TRUE, labels=agelabels)
+                    
+````
 
-```r
-                    source("./recodeutilities")
-```
-
-```
-## Warning: cannot open file './recodeutilities': No such file or directory
-```
-
-```
-## Error: cannot open the connection
-```
-
-```r
-##dataframe is a dataframe that contains the RAC1P variable and the HISP variable
-## This function pulls all self-identified Hispanics or Latinos into a separate group
-## regardless of what self-identified race category they are in.
-racerecode<-function(dataframe)
-{
-        ## Pull out Hispanics into a separate code.
-        dataframe$racerecode<-ifelse(dataframe$HISP > 1, 10, dataframe$RAC1P)
-        racelabels<-c("White", "Black", "Asian", "American Indian + Alaskan Native ", "Other", "Multiple", "Latino")
-        racecuts<-c(0,1,2,4,6,8,9,10)
-        dataframe$Race<-cut(dataframe$racerecode, breaks=racecuts, labels=racelabels)
-        return(dataframe)
-}
-
-racerecode(physicians)
-```
-
-```
-## Error: object 'physicians' not found
-```
-
-```r
-table(physicians$Race)
-```
-
-```
-## Error: object 'physicians' not found
-```
+You can set up your own reusable code for this by addint to the recodeutitilities.R file.
 
 --- .class #id 
 

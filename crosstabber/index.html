@@ -73,6 +73,14 @@ It needs to be easy for students and pretty easy for faculty too. </p>
 
 <p>It makes it easy to do crosstabs</p>
 
+<p>It is not overwhelming</p>
+
+<p>It is easy to add your own data sets and custom recoding, which can be as complex as you want.</p>
+
+<p>Much of the R code is prewritten, with good examples to follow. </p>
+
+<p>You can find helpful code at the crosstabber-tools repository.</p>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -82,51 +90,25 @@ It needs to be easy for students and pretty easy for faculty too. </p>
     <h2>Create new data</h2>
   </hgroup>
   <article data-timings="">
-    <p>To make new datasets to use in your own instance, you can use crosstabber-tools.</p>
+    <p>To make new datasets to use in your own instance, you can use crosstabber-tools.
+The census uses some standard variable names which makes sharing code easier..
+For example it creates recodes easily</p>
 
-<pre><code class="r">physicians&lt;-readRDS(&quot;./physicians.rds&quot;)
+<pre><code class="r">        agebreaks&lt;-c(0, 4, 14, 24, 34, 44, 54, 64, 200)
+        agelabels=c(&quot;Under 4&quot;, &quot;5-14&quot;, &quot;15-24&quot;, &quot;25-34&quot;, &quot;35-44&quot;, &quot;45-54&quot;, &quot;55-64&quot;, &quot;65+&quot;)
+agebreaks
 </code></pre>
 
-<pre><code>## Warning: cannot open compressed file &#39;./physicians.rds&#39;, probable reason
-## &#39;No such file or directory&#39;
+<pre><code>## [1]   0   4  14  24  34  44  54  64 200
 </code></pre>
 
-<pre><code>## Error: cannot open the connection
+<p>Then to apply on your dataframe you use code like this (but substituting the name of your dataframe).</p>
+
+<pre><code>dataframe$Age&lt;-cut(dataframe$AGEP, breaks=agebreaks, ordered_result=TRUE, labels=agelabels)
+
 </code></pre>
 
-<pre><code class="r">                    source(&quot;./recodeutilities&quot;)
-</code></pre>
-
-<pre><code>## Warning: cannot open file &#39;./recodeutilities&#39;: No such file or directory
-</code></pre>
-
-<pre><code>## Error: cannot open the connection
-</code></pre>
-
-<pre><code class="r">##dataframe is a dataframe that contains the RAC1P variable and the HISP variable
-## This function pulls all self-identified Hispanics or Latinos into a separate group
-## regardless of what self-identified race category they are in.
-racerecode&lt;-function(dataframe)
-{
-        ## Pull out Hispanics into a separate code.
-        dataframe$racerecode&lt;-ifelse(dataframe$HISP &gt; 1, 10, dataframe$RAC1P)
-        racelabels&lt;-c(&quot;White&quot;, &quot;Black&quot;, &quot;Asian&quot;, &quot;American Indian + Alaskan Native &quot;, &quot;Other&quot;, &quot;Multiple&quot;, &quot;Latino&quot;)
-        racecuts&lt;-c(0,1,2,4,6,8,9,10)
-        dataframe$Race&lt;-cut(dataframe$racerecode, breaks=racecuts, labels=racelabels)
-        return(dataframe)
-}
-
-racerecode(physicians)
-</code></pre>
-
-<pre><code>## Error: object &#39;physicians&#39; not found
-</code></pre>
-
-<pre><code class="r">table(physicians$Race)
-</code></pre>
-
-<pre><code>## Error: object &#39;physicians&#39; not found
-</code></pre>
+<p>You can set up your own reusable code for this by addint to the recodeutitilities.R file.</p>
 
   </article>
   <!-- Presenter Notes -->

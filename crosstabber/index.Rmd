@@ -33,22 +33,33 @@ It makes it easy to do crosstabs
 
 It is not overwhelming
 
-It is easy to add your own data sets
+It is easy to add your own data sets and custom recoding, which can be as complex as you want.
+
+Much of the R code is prewritten, with good examples to follow. 
+
+You can find helpful code at the crosstabber-tools repository.
 
 --- .class #id 
 
 ## Create new data
 To make new datasets to use in your own instance, you can use crosstabber-tools.
+The census uses some standard variable names which makes sharing code easier..
 For example it creates recodes easily
 ````{r}
 
         agebreaks<-c(0, 4, 14, 24, 34, 44, 54, 64, 200)
         agelabels=c("Under 4", "5-14", "15-24", "25-34", "35-44", "45-54", "55-64", "65+")
-        dataframe$Age<-cut(dataframe$AGEP, breaks=agebreaks, ordered_result=TRUE, labels=agelabels)
+agebreaks
 
+````
+Then to apply on your dataframe you use code like this (but substituting the name of your dataframe).
 
+````
+dataframe$Age<-cut(dataframe$AGEP, breaks=agebreaks, ordered_result=TRUE, labels=agelabels)
                     
 ````
+
+You can set up your own reusable code for this by addint to the recodeutitilities.R file.
 
 --- .class #id 
 
